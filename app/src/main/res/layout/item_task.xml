@@ -1,31 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:background="@drawable/bg_solid_rectangle"
-    android:layout_marginTop="10dp">
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <data>
+        <variable
+            name="taskData"
+            type="com.kariba.todoapp.model.TaskData" />
+    </data>
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toStartOf="@+id/checkbox"
-        android:text="Create new project"
-        android:textSize="16sp"
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp"
-        android:paddingStart="20dp"
-        android:gravity="start"/>
+        android:orientation="horizontal"
+        android:background="@drawable/bg_solid_rectangle"
+        android:layout_marginTop="10dp">
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/checkbox"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:padding="6dp"
-        android:src="@drawable/check_drawable"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
-        android:layout_marginEnd="10dp"/>
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@+id/checkbox"
+            android:text="@{taskData.taskName}"
+            android:textSize="16sp"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:paddingStart="20dp"
+            android:gravity="start"/>
 
-</RelativeLayout>
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/checkbox"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="6dp"
+            android:src="@{taskData.isComplete ? @drawable/uncheck_drawable :@drawable/check_drawable}"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"/>
+
+    </RelativeLayout>
+
+</layout>
