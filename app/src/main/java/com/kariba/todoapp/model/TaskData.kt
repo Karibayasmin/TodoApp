@@ -1,8 +1,11 @@
 package com.kariba.todoapp.model
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
+@Entity(tableName = "task_table")
 class TaskData (
     @SerializedName("taskName")
     var taskName : String? = "",
@@ -11,6 +14,6 @@ class TaskData (
     var isComplete : Boolean? = false,
 
 ) : Serializable {
-    @SerializedName("id")
-    var id : Int? = 0
+    @PrimaryKey(autoGenerate = true)
+    var id: Long? = null
 }

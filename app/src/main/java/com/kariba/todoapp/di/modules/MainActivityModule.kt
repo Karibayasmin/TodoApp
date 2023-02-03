@@ -2,6 +2,7 @@ package com.kariba.todoapp.di.modules
 
 import android.content.Context
 import com.kariba.todoapp.adapter.TaskAdapter
+import com.kariba.todoapp.localdatabase.LocalDatabase
 import com.kariba.todoapp.viewmodel.TaskViewModel
 import dagger.Module
 import dagger.Provides
@@ -19,5 +20,11 @@ class MainActivityModule {
     fun getMainViewModel() : TaskViewModel {
 
         return  TaskViewModel()
+    }
+
+    @Provides
+    fun getLocalDatabase(context: Context) : LocalDatabase {
+
+        return  LocalDatabase.getDatabase(context)
     }
 }

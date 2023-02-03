@@ -19,6 +19,7 @@ import com.kariba.todoapp.UserApplication
 import com.kariba.todoapp.adapter.TaskAdapter
 import com.kariba.todoapp.databinding.ActivityMainBinding
 import com.kariba.todoapp.interfaces.OnItemClickListener
+import com.kariba.todoapp.localdatabase.LocalDatabase
 import com.kariba.todoapp.model.TaskData
 import com.kariba.todoapp.viewmodel.TaskViewModel
 import javax.inject.Inject
@@ -30,6 +31,11 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
 
     @Inject
     lateinit var taskAdapter: TaskAdapter
+
+    @Inject
+    lateinit var localDatabase: LocalDatabase
+
+    var taskList : ArrayList<TaskData> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +61,19 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         binding.fabAdd.setOnClickListener {
             showAddTaskAlert()
         }
+
+        fetchTaskData()
+    }
+
+    private fun fetchTaskData() {
+        localDatabase.getTaskhDao().getTaskList().observe(this, object : Observer<List<TaskData>>{
+            override fun onChanged(data: List<TaskData>) {
+                taskList = data as ArrayList<TaskData>
+                taskAdapter.setTaskData(taskList)
+                taskAdapter.notifyDataSetChanged()
+            }
+
+        })
     }
 
     private fun showAddTaskAlert() {
@@ -76,17 +95,18 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         }
 
         buttonOk.setOnClickListener {
-            getTaskData(this, editTextTask.text.toString())
+            addTaskData(this, editTextTask.text.toString())
             dialog.dismiss()
         }
 
         dialog.show()
     }
 
-    private fun getTaskData(context: Context, newTask : String) {
-        taskViewModel.getTaskData(context, task = newTask).observe(this, object : Observer<ArrayList<TaskData>>{
-            override fun onChanged(data: ArrayList<TaskData>) {
-                taskAdapter.setTaskData(data)
+    private fun addTaskData(context: Context, newTask : String) {
+        taskViewModel.getTaskData(context, localDatabase, task = newTask).observe(this, object : Observer<List<TaskData>>{
+            override fun onChanged(data: List<TaskData>) {
+                taskList = data as ArrayList<TaskData>
+                taskAdapter.setTaskData(taskList)
                 taskAdapter.notifyDataSetChanged()
             }
 
@@ -98,9 +118,10 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
     }
 
     private fun updateTask(position: Int) {
-        taskViewModel.getTaskData(this, isUpdate = true, position = position).observe(this, object : Observer<ArrayList<TaskData>>{
-            override fun onChanged(data: ArrayList<TaskData>) {
-                taskAdapter.setTaskData(data)
+        taskViewModel.getTaskData(this, localDatabase, isUpdate = true, position = position, taskList = taskList).observe(this, object : Observer<List<TaskData>>{
+            override fun onChanged(data: List<TaskData>) {
+                taskList = data as ArrayList<TaskData>
+                taskAdapter.setTaskData(taskList)
                 taskAdapter.notifyDataSetChanged()
             }
 

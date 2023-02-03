@@ -8,39 +8,33 @@ import androidx.databinding.BindingAdapter
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.kariba.todoapp.localdatabase.LocalDatabase
 import com.kariba.todoapp.model.TaskData
 
 class TaskViewModel : ViewModel() {
-    var mutableTaskDataResponse = MutableLiveData<ArrayList<TaskData>>()
-    var taskList : ArrayList<TaskData> = ArrayList()
 
-    fun getTaskData(context: Context, task : String = "", isUpdate : Boolean = false, position : Int = 0): LiveData<ArrayList<TaskData>>{
-        mutableTaskDataResponse = MutableLiveData()
-        loadTaskData(context, task, isUpdate, position)
-        return mutableTaskDataResponse
+
+    fun getTaskData(context: Context, localDatabase: LocalDatabase, task: String = "", isUpdate: Boolean = false, position: Int = 0, taskList : ArrayList<TaskData>? = ArrayList()): LiveData<List<TaskData>> {
+        loadTaskData(context, localDatabase, task, isUpdate, position, taskList)
+        return localDatabase.getTaskhDao().getTaskList()
     }
 
-    private fun loadTaskData(context: Context, task: String, isUpdate: Boolean, position: Int) {
+    private fun loadTaskData(context: Context, localDatabase: LocalDatabase, task: String, isUpdate: Boolean, position: Int, taskList : ArrayList<TaskData>?) {
         if(isUpdate == false){
-            taskList.add(TaskData(task, false))
-            setTaskData(taskList)
+            localDatabase.getTaskhDao().insertTask(TaskData(task, false))
         }else{
-            taskList[position].isComplete = if(taskList[position].isComplete == true) false else true
-            setTaskData(taskList)
+
+            var updateTask = TaskData()
+            taskList?.get(position).let {
+                updateTask.id = it?.id
+                updateTask.isComplete = if(taskList?.get(position)?.isComplete == true) false else true
+                updateTask.taskName = it?.taskName
+            }
+
+            localDatabase.getTaskhDao().updateTask(updateTask)
+
         }
 
     }
 
-    private fun setTaskData(data: ArrayList<TaskData>) {
-        mutableTaskDataResponse.value = data
-    }
-
-    @BindingAdapter("strikethrough")
-    fun strikethrough(view: TextView, show: Boolean) {
-        view.paintFlags = if (show) {
-            view.paintFlags or STRIKE_THRU_TEXT_FLAG
-        } else {
-            view.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
-        }
-    }
 }
