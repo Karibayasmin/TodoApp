@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity"
     android:orientation="vertical"
-    android:background="@color/backgroundColor">
+    android:background="@color/ash_light">
 
     <androidx.appcompat.widget.AppCompatTextView
         android:layout_width="wrap_content"
