@@ -1,4 +1,4 @@
-package com.singularitybd.todoapp
+package com.kariba.todoapp
 
 import org.junit.Test
 

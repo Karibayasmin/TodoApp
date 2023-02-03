@@ -1,4 +1,4 @@
-package com.singularitybd.todoapp
+package com.kariba.todoapp
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

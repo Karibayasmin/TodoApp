@@ -1,4 +1,4 @@
-package com.singularitybd.todoapp
+package com.kariba.todoapp
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
